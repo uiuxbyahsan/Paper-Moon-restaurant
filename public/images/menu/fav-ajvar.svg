@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600" role="img" aria-label="Ajvar">
+  <defs>
+    <radialGradient id="p-fav-ajvar" cx="0.4" cy="0.35" r="0.75">
+      <stop offset="0" stop-color="#F3EFE6" />
+      <stop offset="0.7" stop-color="#E7E1D2" />
+      <stop offset="1" stop-color="#d8d1bf" />
+    </radialGradient>
+  </defs>
+  <rect width="600" height="600" fill="#0B0B0B" />
+  <circle cx="300" cy="300" r="296" fill="url(#p-fav-ajvar)" />
+  <circle cx="300" cy="300" r="232" fill="none" stroke="#0B0B0B" stroke-opacity="0.10" stroke-width="2" />
+  <circle cx="300" cy="300" r="210" fill="none" stroke="#0B0B0B" stroke-opacity="0.06" stroke-width="1" />
+  <path d="M 366.2 210 a 86 86 0 1 0 0 172 a 67.08 67.08 0 1 1 0 -172 z" fill="none" stroke="#0B0B0B" stroke-width="2" opacity="0.14" />
+  <text x="300" y="336" text-anchor="middle" fill="#0B0B0B" fill-opacity="0.30"
+    font-family="Georgia, 'Cormorant Garamond', serif" font-size="120" font-style="italic">A</text>
+</svg>

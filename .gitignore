@@ -34,3 +34,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# source design assets / inspiration (originals live in public/images)
+/Restoran Assets\ /
+/new inspi/
+
+# local agent/editor tooling and build archives
+/.claude/
+*.zip

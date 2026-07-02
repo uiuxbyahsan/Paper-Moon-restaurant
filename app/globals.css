@@ -3,25 +3,122 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --black: #0b0b0b;
+  --cream: #f3efe6;
+  --cream-dim: #e7e1d2;
+  --charcoal: #1a1a1a;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--black);
+    color: var(--cream);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--cream);
+    color: var(--black);
+  }
+
+  /* Visible, on-brand focus ring for keyboard users */
+  :focus-visible {
+    outline: 2px solid var(--cream);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-serif), "Cormorant Garamond", serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .shell {
+    @apply mx-auto w-full max-w-shell px-6 sm:px-8 lg:px-12;
+  }
+
+  /* Small script eyebrow label used above section headings */
+  .eyebrow {
+    @apply font-script text-cream/70;
+    font-size: clamp(1.1rem, 1.6vw, 1.55rem);
+    line-height: 1;
+  }
+
+  .eyebrow--dark {
+    @apply text-charcoal/70;
+  }
+
+  .pill {
+    @apply inline-flex items-center justify-center rounded-full px-7 py-3 text-sm font-medium
+      tracking-wide2 uppercase transition-all duration-300 ease-out;
+  }
+
+  .pill-cream {
+    @apply pill bg-cream text-charcoal hover:bg-cream-dim;
+  }
+
+  .pill-outline {
+    @apply pill border border-cream/40 text-cream hover:border-cream hover:bg-cream hover:text-charcoal;
+  }
+
+  /* Arch mask used by the hero image, echoing the inspiration template */
+  .arch {
+    border-top-left-radius: 50% 38%;
+    border-top-right-radius: 50% 38%;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Printable /menu route: force legible black-on-white and hide chrome. */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .printable,
+  .printable * {
+    background: #fff !important;
+    color: #000 !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Respect users who ask for less motion: drop transforms/looping animations
+   and collapse transitions to near-instant fades. Framer Motion components
+   additionally read useReducedMotion(); this is the CSS-side safety net. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }

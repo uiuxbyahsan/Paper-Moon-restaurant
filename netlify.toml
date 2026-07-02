@@ -1,0 +1,13 @@
+# Netlify configuration for the Paper Moon Next.js site.
+# Netlify auto-installs the official Next.js runtime (@netlify/plugin-nextjs),
+# which handles SSR + the /api/reserve route. No static export needed.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

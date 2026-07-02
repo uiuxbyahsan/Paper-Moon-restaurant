@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Paper Moon
 
-## Getting Started
+Marketing site for **Paper Moon**, a brasserie in Sarajevo, Bosnia & Herzegovina — _"Where elegance meets flavor since 2015."_
 
-First, run the development server:
+A single-page, continuous-scroll homepage with anchor navigation, plus a dedicated `/menu` route. Black-and-cream editorial design, Framer Motion throughout (restrained, scroll-triggered), fully responsive and accessible.
+
+## Stack
+
+- **Next.js 14** (App Router) · **TypeScript**
+- **Tailwind CSS** — palette + fonts in [`tailwind.config.ts`](tailwind.config.ts)
+- **Framer Motion** — animation
+- **next/font** — Cormorant Garamond (display), Inter (body), Petit Formal Script (accents)
+- **sharp** — image optimization + the logo background-removal script
+
+## Develop
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev            # http://localhost:3000
+npm run build && npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Helper scripts:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run gen:placeholders   # regenerate the branded food placeholders
+npm run gen:logo           # re-derive public/images/logo.png from logo.jpg
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project shape
 
-## Learn More
+```
+app/
+  page.tsx             # homepage — composes every section
+  menu/page.tsx        # full categorized, printable menu
+  api/reserve/route.ts # reservation endpoint (see "Before launch")
+components/             # one file per section + ui/ primitives
+lib/
+  site.ts              # brand + contact details, nav
+  menu.ts              # all menu items, prices, images
+  content.ts           # spaces, signatures, testimonials, gallery, about
+public/images/         # brand photos + generated placeholders
+scripts/               # placeholder + logo generators
+```
 
-To learn more about Next.js, take a look at the following resources:
+Content is data-driven: edit `lib/*.ts` to change copy, dishes, prices, or images — no component changes needed.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Swapping in real food photos
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Food shots are branded SVG **placeholders** (`public/images/menu/*.svg`). To use a real
+photo, drop the file in `public/images/menu/` and change that item's `image` field in
+[`lib/menu.ts`](lib/menu.ts) (or `lib/content.ts` for Favorite Dishes / Gallery). JPG/PNG
+images flow through the next/image optimizer automatically — no other change required.
 
-## Deploy on Vercel
+## Before launch (placeholders to confirm — see brief §8)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [ ] **Address** — taken from the Instagram bio (`Hamdije Čemerlića 45`); confirm in `lib/site.ts`.
+- [ ] **Menu & prices** — realistic placeholders in `lib/menu.ts`; replace with the real menu.
+- [ ] **Food photography** — swap the SVG placeholders (see above).
+- [ ] **Chef bios** — placeholder copy in the About → Our Chefs tab (`lib/content.ts`).
+- [ ] **Testimonials** — placeholder quotes in `lib/content.ts`; swap for real reviews.
+- [ ] **Reservation email** — `app/api/reserve/route.ts` validates + logs; wire delivery to
+      `papermoon.sa@gmail.com` (Formspree / Resend / SMTP) once hosting is decided.
+- [ ] **SITE_URL** — set the production domain in `app/layout.tsx` for correct OG/canonical URLs.

@@ -3,11 +3,14 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Logo } from "@/components/Logo";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { NAV_LINKS } from "@/lib/site";
+import { useLanguage } from "@/lib/LanguageContext";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const reduce = useReducedMotion();
+  const { t } = useLanguage();
 
   // Lock body scroll while the mobile drawer is open.
   useEffect(() => {
@@ -34,12 +37,13 @@ export function Navbar() {
               href={link.href}
               className="group relative text-sm tracking-wide2 text-cream/85 transition-colors hover:text-cream"
             >
-              {link.label}
+              {t.nav.links[link.id]}
               <span className="absolute -bottom-1 left-0 h-px w-0 bg-cream transition-all duration-300 group-hover:w-full" />
             </a>
           ))}
+          <LanguageSwitcher />
           <a href="#reserve" className="pill-cream">
-            Reserve a Table
+            {t.nav.reserve}
           </a>
         </div>
 
@@ -104,13 +108,16 @@ export function Navbar() {
                       onClick={() => setOpen(false)}
                       className="block border-b border-cream/10 py-4 font-serif text-3xl text-cream"
                     >
-                      {link.label}
+                      {t.nav.links[link.id]}
                     </a>
                   </motion.li>
                 ))}
               </motion.ul>
+              <div className="mt-2 border-b border-cream/10">
+                <LanguageSwitcher variant="mobile" onSelect={() => setOpen(false)} />
+              </div>
               <a href="#reserve" onClick={() => setOpen(false)} className="pill-cream mt-8 w-full">
-                Reserve a Table
+                {t.nav.reserve}
               </a>
             </motion.div>
           </>

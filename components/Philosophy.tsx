@@ -5,10 +5,12 @@ import Image from "next/image";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/ui/motion";
+import { useLanguage } from "@/lib/LanguageContext";
 
 export function Philosophy() {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
+  const { t } = useLanguage();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], reduce ? ["0%", "0%"] : ["-8%", "8%"]);
 
@@ -33,16 +35,14 @@ export function Philosophy() {
         <div className="flex items-center bg-cream px-8 py-14 text-charcoal sm:px-14">
           <div className="overflow-hidden">
             <Reveal y={reduce ? 0 : 90} duration={0.9} amount={0.3}>
-              <Eyebrow dark>Our Philosophy</Eyebrow>
+              <Eyebrow dark>{t.philosophy.eyebrow}</Eyebrow>
               <h2 className="mt-4 text-4xl leading-tight sm:text-5xl">
-                Make Every Evening Worth Remembering
+                {t.philosophy.heading}
               </h2>
               <p className="mt-6 max-w-prose text-base leading-relaxed text-charcoal/75">
-                Every plate at Paper Moon is sourced with care, prepared with patience, and served
-                with warmth — from early-morning pastries to candlelit dinners. Since 2015, our
-                kitchen has celebrated the beauty of simplicity.
+                {t.philosophy.body}
               </p>
-              <p className="mt-8 font-serif text-2xl italic text-charcoal/60">— Since 2015</p>
+              <p className="mt-8 font-serif text-2xl italic text-charcoal/60">{t.philosophy.since}</p>
             </Reveal>
           </div>
         </div>

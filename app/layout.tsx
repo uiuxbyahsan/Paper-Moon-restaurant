@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter, Petit_Formal_Script } from "next/font/google";
 import "./globals.css";
+import { LanguageProvider } from "@/lib/LanguageContext";
 
 const serif = Cormorant_Garamond({
   subsets: ["latin"],
@@ -72,8 +73,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${serif.variable} ${sans.variable} ${script.variable}`}>
-      <body className="bg-black text-cream antialiased">{children}</body>
+    <html lang="bs" className={`${serif.variable} ${sans.variable} ${script.variable}`}>
+      <body className="bg-black text-cream antialiased">
+        <LanguageProvider>{children}</LanguageProvider>
+      </body>
     </html>
   );
 }

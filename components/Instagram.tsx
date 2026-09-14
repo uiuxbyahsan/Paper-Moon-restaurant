@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import { Reveal } from "@/components/ui/motion";
+import { useLanguage } from "@/lib/LanguageContext";
 
 const REELS = [
   {
@@ -44,6 +45,7 @@ const REELS = [
 ];
 
 export function Instagram() {
+  const { t } = useLanguage();
   const trackRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const dragStart = useRef({ x: 0, scrollLeft: 0 });
@@ -75,9 +77,9 @@ export function Instagram() {
     <section className="bg-black py-24 sm:py-32 overflow-hidden border-t border-cream/5">
       <div className="shell mb-14 text-center">
         <Reveal>
-          <h2 className="text-4xl sm:text-5xl font-serif">Follow us on Instagram</h2>
+          <h2 className="text-4xl sm:text-5xl font-serif">{t.instagram.heading}</h2>
           <p className="mt-4 text-cream/60 max-w-xl mx-auto text-base">
-            See our latest dishes, evening moments, and behind-the-scenes stories.
+            {t.instagram.intro}
           </p>
           <a
             href="https://www.instagram.com/papermoon.sarajevo_/"

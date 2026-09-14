@@ -7,6 +7,7 @@ import { FoodImage } from "@/components/ui/FoodImage";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/ui/motion";
 import { GALLERY } from "@/lib/content";
+import { useLanguage } from "@/lib/LanguageContext";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const AUTO_MS = 4500;
@@ -14,6 +15,8 @@ const N = GALLERY.length;
 
 export function Gallery() {
   const reduce = useReducedMotion();
+  const { t } = useLanguage();
+  const copyOf = (id: string) => t.gallery.items[id];
   const containerRef = useRef<HTMLDivElement>(null);
   const [box, setBox] = useState({ w: 1000, h: 520 });
   const [index, setIndex] = useState(0);
@@ -98,13 +101,14 @@ export function Gallery() {
   }, [lightbox, close, step]);
 
   const lb = lightbox === null ? null : GALLERY[lightbox];
+  const lbCopy = lb ? copyOf(lb.id) : null;
 
   return (
     <section id="gallery" className="scroll-mt-24 overflow-hidden bg-black py-24 sm:py-32">
       <div className="shell">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <Eyebrow>Moments</Eyebrow>
-          <h2 className="mt-3 text-4xl sm:text-5xl">Evenings at Paper Moon</h2>
+          <Eyebrow>{t.gallery.eyebrow}</Eyebrow>
+          <h2 className="mt-3 text-4xl sm:text-5xl">{t.gallery.heading}</h2>
         </Reveal>
       </div>
 
@@ -117,17 +121,18 @@ export function Gallery() {
       >
         {GALLERY.map((item, i) => {
           const slot = (i - index + N) % N;
-          const t = reduce ? target(0) : target(slot);
+          const pos = reduce ? target(0) : target(slot);
           const isCenter = slot === 0;
+          const copy = copyOf(item.id);
           return (
             <motion.button
-              key={item.caption}
+              key={item.id}
               type="button"
               initial={false}
-              animate={t}
+              animate={pos}
               transition={{ duration: 0.6, ease: EASE, zIndex: { duration: 0 } }}
               onClick={() => (isCenter ? setLightbox(i) : setIndex(i))}
-              aria-label={isCenter ? `Open ${item.caption}` : `Show ${item.caption}`}
+              aria-label={isCenter ? `Open ${copy.caption}` : `Show ${copy.caption}`}
               aria-hidden={reduce && !isCenter ? true : undefined}
               style={{
                 width: cardW,
@@ -135,14 +140,14 @@ export function Gallery() {
                 left: "50%",
                 top: "50%",
                 position: "absolute",
-                pointerEvents: t.opacity < 0.2 ? "none" : "auto",
+                pointerEvents: pos.opacity < 0.2 ? "none" : "auto",
                 display: reduce && !isCenter ? "none" : "block",
               }}
               className="group overflow-hidden rounded-lg shadow-2xl shadow-black/60 ring-1 ring-cream/5"
             >
               <FoodImage
                 src={item.image}
-                alt={item.alt}
+                alt={copy.alt}
                 fill
                 sizes="(max-width: 768px) 70vw, 45vw"
                 className={isCenter ? "transition-transform duration-700 group-hover:scale-105" : ""}
@@ -164,7 +169,7 @@ export function Gallery() {
               transition={{ duration: 0.3 }}
               className="text-sm uppercase tracking-wide2 text-cream/70"
             >
-              {GALLERY[index].caption}
+              {copyOf(GALLERY[index].id).caption}
             </motion.p>
           </AnimatePresence>
         </div>
@@ -172,10 +177,10 @@ export function Gallery() {
         <div className="flex items-center justify-center gap-2.5">
           {GALLERY.map((item, i) => (
             <button
-              key={item.caption}
+              key={item.id}
               type="button"
               onClick={() => setIndex(i)}
-              aria-label={`Show ${item.caption}`}
+              aria-label={`Show ${copyOf(item.id).caption}`}
               aria-current={i === index}
               className={`h-2 rounded-full transition-all duration-500 ${
                 i === index ? "w-7 bg-cream" : "w-2 bg-cream/30 hover:bg-cream/60"
@@ -187,7 +192,7 @@ export function Gallery() {
 
       {/* Lightbox */}
       <AnimatePresence>
-        {lb && (
+        {lb && lbCopy && (
           <motion.div
             className="fixed inset-0 z-[60] flex items-center justify-center bg-black/90 p-4"
             initial={{ opacity: 0 }}
@@ -196,7 +201,7 @@ export function Gallery() {
             onClick={close}
             role="dialog"
             aria-modal="true"
-            aria-label={lb.caption}
+            aria-label={lbCopy.caption}
           >
             <button
               type="button"
@@ -245,10 +250,10 @@ export function Gallery() {
               className="relative flex max-h-[85vh] w-full max-w-4xl flex-col items-center"
             >
               <div className="relative h-[70vh] w-full">
-                <Image src={lb.image} alt={lb.alt} fill sizes="100vw" className="object-contain" />
+                <Image src={lb.image} alt={lbCopy.alt} fill sizes="100vw" className="object-contain" />
               </div>
               <figcaption className="mt-4 text-sm uppercase tracking-wide2 text-cream/70">
-                {lb.caption}
+                {lbCopy.caption}
               </figcaption>
             </motion.figure>
           </motion.div>

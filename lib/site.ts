@@ -18,11 +18,14 @@ export const SITE = {
 } as const;
 
 // Header navigation (matches brief §5.1). "Reserve a Table" is rendered as a
-// separate pill button, not part of this list.
-export const NAV_LINKS: { label: string; href: string }[] = [
-  { label: "Menu", href: "#menu" },
-  { label: "Our Spaces", href: "#spaces" },
-  { label: "About", href: "#about" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "Contact", href: "#contact" },
+// separate pill button, not part of this list. Labels are translated at render
+// time via t.nav.links[id]; only the id + anchor are structural.
+export type NavLinkId = "menu" | "spaces" | "about" | "gallery" | "contact";
+
+export const NAV_LINKS: { id: NavLinkId; href: string }[] = [
+  { id: "menu", href: "#menu" },
+  { id: "spaces", href: "#spaces" },
+  { id: "about", href: "#about" },
+  { id: "gallery", href: "#gallery" },
+  { id: "contact", href: "#contact" },
 ];

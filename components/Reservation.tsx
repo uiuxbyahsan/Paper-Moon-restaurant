@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/motion";
+import { useLanguage } from "@/lib/LanguageContext";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -36,6 +37,8 @@ const inputClass =
   "peer w-full border-b border-charcoal/25 bg-transparent py-2 text-charcoal placeholder-charcoal/40 focus:outline-none";
 
 export function Reservation() {
+  const { t } = useLanguage();
+  const r = t.reservation;
   const [status, setStatus] = useState<Status>("idle");
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -74,8 +77,8 @@ export function Reservation() {
       <div className="shell relative">
         <Reveal className="mx-auto max-w-2xl overflow-hidden rounded-none bg-cream px-7 py-12 text-charcoal shadow-2xl shadow-black/40 sm:px-12">
           <div className="text-center">
-            <Eyebrow dark>Reservation</Eyebrow>
-            <h2 className="mt-2 text-4xl sm:text-5xl">Reserve a Table</h2>
+            <Eyebrow dark>{r.eyebrow}</Eyebrow>
+            <h2 className="mt-2 text-4xl sm:text-5xl">{r.heading}</h2>
           </div>
 
           <AnimatePresence mode="wait">
@@ -92,17 +95,14 @@ export function Reservation() {
                     <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </span>
-                <h3 className="font-serif text-3xl">Thank you</h3>
-                <p className="max-w-sm text-charcoal/70">
-                  Your request has reached us. We&apos;ll confirm your table by phone or email
-                  shortly.
-                </p>
+                <h3 className="font-serif text-3xl">{r.successTitle}</h3>
+                <p className="max-w-sm text-charcoal/70">{r.successBody}</p>
                 <button
                   type="button"
                   onClick={() => setStatus("idle")}
                   className="mt-2 text-sm uppercase tracking-wide2 text-charcoal/60 underline-offset-4 hover:underline"
                 >
-                  Make another reservation
+                  {r.another}
                 </button>
               </motion.div>
             ) : (
@@ -115,16 +115,16 @@ export function Reservation() {
               >
                 <Stagger gap={0.06} className="grid grid-cols-1 gap-7 sm:grid-cols-2">
                   <StaggerItem>
-                    <Field label="Seating Preference" htmlFor="seating">
+                    <Field label={r.fields.seating} htmlFor="seating">
                       <select id="seating" name="seating" className={inputClass} defaultValue="Indoor">
-                        <option>Indoor</option>
-                        <option>Terrace</option>
-                        <option>Bar</option>
+                        <option value="Indoor">{r.seatingOptions.indoor}</option>
+                        <option value="Terrace">{r.seatingOptions.terrace}</option>
+                        <option value="Bar">{r.seatingOptions.bar}</option>
                       </select>
                     </Field>
                   </StaggerItem>
                   <StaggerItem>
-                    <Field label="Guests" htmlFor="guests">
+                    <Field label={r.fields.guests} htmlFor="guests">
                       <input
                         id="guests"
                         name="guests"
@@ -132,57 +132,57 @@ export function Reservation() {
                         min={1}
                         max={30}
                         required
-                        placeholder="Number of guests"
+                        placeholder={r.placeholders.guests}
                         className={inputClass}
                       />
                     </Field>
                   </StaggerItem>
                   <StaggerItem>
-                    <Field label="Date" htmlFor="date">
+                    <Field label={r.fields.date} htmlFor="date">
                       <input id="date" name="date" type="date" required className={inputClass} />
                     </Field>
                   </StaggerItem>
                   <StaggerItem>
-                    <Field label="Time" htmlFor="time">
+                    <Field label={r.fields.time} htmlFor="time">
                       <input id="time" name="time" type="time" required className={inputClass} />
                     </Field>
                   </StaggerItem>
                   <StaggerItem className="sm:col-span-2">
-                    <Field label="Special Request" htmlFor="message">
+                    <Field label={r.fields.message} htmlFor="message">
                       <textarea
                         id="message"
                         name="message"
                         rows={2}
-                        placeholder="A quiet corner, a celebration, dietary notes…"
+                        placeholder={r.placeholders.message}
                         className={`${inputClass} resize-none`}
                       />
                     </Field>
                   </StaggerItem>
                   <StaggerItem>
-                    <Field label="Name" htmlFor="name">
-                      <input id="name" name="name" required placeholder="Jane Smith" className={inputClass} />
+                    <Field label={r.fields.name} htmlFor="name">
+                      <input id="name" name="name" required placeholder={r.placeholders.name} className={inputClass} />
                     </Field>
                   </StaggerItem>
                   <StaggerItem>
-                    <Field label="Phone" htmlFor="phone">
+                    <Field label={r.fields.phone} htmlFor="phone">
                       <input
                         id="phone"
                         name="phone"
                         type="tel"
                         required
-                        placeholder="+387 ..."
+                        placeholder={r.placeholders.phone}
                         className={inputClass}
                       />
                     </Field>
                   </StaggerItem>
                   <StaggerItem className="sm:col-span-2">
-                    <Field label="Email" htmlFor="email">
+                    <Field label={r.fields.email} htmlFor="email">
                       <input
                         id="email"
                         name="email"
                         type="email"
                         required
-                        placeholder="sample@gmail.com"
+                        placeholder={r.placeholders.email}
                         className={inputClass}
                       />
                     </Field>
@@ -196,12 +196,10 @@ export function Reservation() {
                     whileTap={{ scale: 0.97 }}
                     className="rounded-full border border-charcoal px-10 py-3 text-sm uppercase tracking-wide2 text-charcoal transition-colors duration-300 hover:bg-charcoal hover:text-cream disabled:opacity-60"
                   >
-                    {status === "submitting" ? "Sending…" : "Reserve a Table"}
+                    {status === "submitting" ? r.sending : r.submit}
                   </motion.button>
                   {status === "error" && (
-                    <p className="text-sm text-red-700">
-                      Something went wrong. Please call us at +387 33 956 939.
-                    </p>
+                    <p className="text-sm text-red-700">{r.error}</p>
                   )}
                 </div>
               </motion.form>

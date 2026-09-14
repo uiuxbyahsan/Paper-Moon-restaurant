@@ -6,12 +6,15 @@ import { FoodImage } from "@/components/ui/FoodImage";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/ui/motion";
 import { FAVORITE_DISHES } from "@/lib/content";
+import { useLanguage } from "@/lib/LanguageContext";
 
 const SPEED = 0.6; // px per frame — slow, steady right-to-left drift
 
 export function FavoriteDishes() {
   const reduce = useReducedMotion();
+  const { t } = useLanguage();
   const items = FAVORITE_DISHES;
+  const nameOf = (id: string) => t.menu.items[id].name;
   // Triplicate so the loop seam is invisible and drag works in both directions.
   const loop = [...items, ...items, ...items];
 
@@ -115,26 +118,26 @@ export function FavoriteDishes() {
     return (
       <section className="overflow-hidden bg-black py-24 sm:py-28">
         <Reveal className="shell mb-12 text-center">
-          <Eyebrow>Favorite Dishes</Eyebrow>
+          <Eyebrow>{t.favorites.eyebrow}</Eyebrow>
         </Reveal>
         <div className="shell flex flex-wrap items-start justify-center gap-x-8 gap-y-10">
           {items.map((dish) => (
-            <div key={dish.name} className="flex flex-col items-center gap-3 group cursor-pointer">
+            <div key={dish.id} className="flex flex-col items-center gap-3 group cursor-pointer">
               <div className="relative block h-60 w-44 sm:h-80 sm:w-60 overflow-hidden">
                 <div className="absolute inset-0 z-0 transition-transform duration-700 ease-out group-hover:scale-105">
-                  <FoodImage src={dish.image} alt={dish.name} fill sizes="(max-width: 640px) 11rem, 15rem" />
+                  <FoodImage src={dish.image} alt={nameOf(dish.id)} fill sizes="(max-width: 640px) 11rem, 15rem" />
                 </div>
                 {/* Dark overlay */}
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out z-10" />
                 {/* Dish name reveal */}
                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-4 opacity-0 group-hover:opacity-100 translate-y-3 group-hover:translate-y-0 transition-all duration-300 ease-out">
                   <p className="text-center font-serif text-lg sm:text-xl text-cream">
-                    {dish.name}
+                    {nameOf(dish.id)}
                   </p>
                 </div>
               </div>
               <span className="text-center font-serif text-lg leading-tight text-cream/85 group-hover:text-cream transition-colors duration-300">
-                {dish.name}
+                {nameOf(dish.id)}
               </span>
             </div>
           ))}
@@ -146,7 +149,7 @@ export function FavoriteDishes() {
   return (
     <section className="overflow-hidden bg-black py-24 sm:py-28">
       <Reveal className="shell mb-12 text-center">
-        <Eyebrow>Favorite Dishes</Eyebrow>
+        <Eyebrow>{t.favorites.eyebrow}</Eyebrow>
       </Reveal>
 
       <div
@@ -163,7 +166,7 @@ export function FavoriteDishes() {
       >
         {loop.map((dish, i) => {
           const isActive = i === activeChild;
-          const dishName = i < items.length ? dish.name : items[i % items.length].name;
+          const dishName = nameOf(dish.id);
           return (
             <div
               key={i}
@@ -183,7 +186,7 @@ export function FavoriteDishes() {
                 <div className="absolute inset-0 z-0 transition-transform duration-700 ease-out group-hover:scale-105">
                   <FoodImage
                     src={dish.image}
-                    alt={i < items.length ? dish.name : ""}
+                    alt={i < items.length ? dishName : ""}
                     fill
                     draggable={false}
                     sizes="(max-width: 640px) 11rem, 15rem"
@@ -213,7 +216,7 @@ export function FavoriteDishes() {
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             className="font-serif text-2xl text-cream"
           >
-            {items[active]?.name}
+            {items[active] ? nameOf(items[active].id) : ""}
           </motion.p>
         </AnimatePresence>
       </div>

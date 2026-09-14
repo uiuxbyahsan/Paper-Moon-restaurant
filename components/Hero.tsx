@@ -3,13 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { useLanguage } from "@/lib/LanguageContext";
 
-const HEADLINE = "Where elegance meets flavor";
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
+  const { t } = useLanguage();
 
   // Measure the viewport so the image can grow to an exact full-bleed rectangle
   // (px width/height, not transform-scale, so the arch curve genuinely flattens
@@ -52,10 +53,10 @@ export function Hero() {
           begins. Desktop: left/right at headline height. Mobile: above/below. */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-[100svh]">
         <p className="absolute left-6 right-6 top-[14%] mx-auto max-w-[16rem] text-center text-sm leading-relaxed text-cream/70 md:left-12 md:right-auto md:top-[60%] md:mx-0 md:max-w-[13rem] md:-translate-y-1/2 md:text-left">
-          From sunrise brunches to candlelit dinners, every plate has a story.
+          {t.hero.flankLeft}
         </p>
         <p className="absolute bottom-[15%] left-6 right-6 mx-auto max-w-[16rem] text-center text-sm leading-relaxed text-cream/70 md:bottom-auto md:left-auto md:right-12 md:top-[60%] md:mx-0 md:max-w-[13rem] md:-translate-y-1/2 md:text-right">
-          Sarajevo&apos;s quiet corner since 2015.
+          {t.hero.flankRight}
         </p>
       </div>
 
@@ -94,7 +95,9 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: EASE, delay: 0.2 }}
           >
-            {HEADLINE}
+            {t.hero.headline.pre}
+            <span className="italic">{t.hero.headline.em}</span>
+            {t.hero.headline.post}
           </motion.h1>
 
           <motion.p
@@ -103,7 +106,7 @@ export function Hero() {
             transition={{ delay: 0.7, duration: 0.7, ease: EASE }}
             className="mt-6 max-w-md text-base text-cream/85 [text-shadow:0_2px_20px_rgba(0,0,0,0.5)] sm:text-lg"
           >
-            Crafted for memorable dining.
+            {t.hero.subtitle}
           </motion.p>
 
           <motion.a
@@ -113,7 +116,7 @@ export function Hero() {
             transition={{ delay: 0.9, duration: 0.7, ease: EASE }}
             className="pill-cream mt-8"
           >
-            Reserve a Table
+            {t.hero.cta}
           </motion.a>
         </div>
 
@@ -125,7 +128,7 @@ export function Hero() {
           <span className="relative h-12 w-px overflow-hidden bg-cream/15">
             <span className="absolute inset-0 origin-top animate-scroll-draw bg-cream" />
           </span>
-          <span className="text-[0.7rem] uppercase tracking-eyebrow text-cream/60">Scroll</span>
+          <span className="text-[0.7rem] uppercase tracking-eyebrow text-cream/60">{t.hero.scroll}</span>
         </motion.div>
       </div>
     </section>

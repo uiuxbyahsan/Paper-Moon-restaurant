@@ -7,10 +7,12 @@ import { FoodImage } from "@/components/ui/FoodImage";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/ui/motion";
 import { CURRENCY, MENU } from "@/lib/menu";
+import { useLanguage } from "@/lib/LanguageContext";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export function MenuTabs() {
+  const { t, language } = useLanguage();
   const [active, setActive] = useState(0);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const reduce = useReducedMotion();
@@ -124,11 +126,11 @@ export function MenuTabs() {
         <Reveal>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <Eyebrow>Taste the Menu</Eyebrow>
-              <h2 className="mt-2 text-5xl sm:text-6xl">Menu</h2>
+              <Eyebrow>{t.menu.eyebrow}</Eyebrow>
+              <h2 className="mt-2 text-5xl sm:text-6xl">{t.menu.heading}</h2>
             </div>
             <p className="max-w-xs text-sm leading-relaxed text-cream/60 sm:text-right">
-              Fresh ingredients, made to be enjoyed, shared, and ordered again.
+              {t.menu.intro}
             </p>
           </div>
         </Reveal>
@@ -161,7 +163,7 @@ export function MenuTabs() {
                       : "border-cream/25 text-cream/70 hover:border-cream/60 hover:text-cream"
                   }`}
                 >
-                  {cat.label}
+                  {t.menu.categories[cat.id]}
                 </button>
               );
             })}
@@ -192,7 +194,7 @@ export function MenuTabs() {
           >
             {loopItems.map((item, idx) => (
               <motion.article
-                key={`${item.name}-${idx}`}
+                key={`${item.id}-${idx}`}
                 variants={{
                   hidden: { opacity: 0, y: reduce ? 0 : 24 },
                   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE } },
@@ -202,7 +204,7 @@ export function MenuTabs() {
                 <div className="relative aspect-[4/5] overflow-hidden">
                   <FoodImage
                     src={item.image}
-                    alt={item.name}
+                    alt={t.menu.items[item.id].name}
                     fill
                     draggable={false}
                     sizes="(max-width: 640px) 40vw, 12rem"
@@ -210,12 +212,12 @@ export function MenuTabs() {
                   />
                 </div>
                 <div className="mt-4 flex items-baseline justify-between gap-3">
-                  <h3 className="font-serif text-base sm:text-lg text-cream">{item.name}</h3>
+                  <h3 className="font-serif text-base sm:text-lg text-cream">{t.menu.items[item.id].name}</h3>
                   <span className="shrink-0 text-cream/70 text-sm sm:text-base">
                     {item.price} {CURRENCY}
                   </span>
                 </div>
-                {item.localName && (
+                {language === "en" && item.localName && (
                   <p className="mt-0.5 text-xs sm:text-sm italic text-cream/45">{item.localName}</p>
                 )}
               </motion.article>
@@ -225,7 +227,7 @@ export function MenuTabs() {
 
         <Reveal className="mt-12 flex justify-center">
           <Link href="/menu" className="pill-outline">
-            View Full Menu
+            {t.menu.viewFull}
           </Link>
         </Reveal>
       </div>

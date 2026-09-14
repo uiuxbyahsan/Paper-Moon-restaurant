@@ -6,11 +6,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { StarRating } from "@/components/ui/StarRating";
 import { TESTIMONIALS } from "@/lib/content";
+import { useLanguage } from "@/lib/LanguageContext";
 
 const ROTATE_MS = 6500;
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export function Testimonials() {
+  const { t } = useLanguage();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const count = TESTIMONIALS.length;
@@ -45,7 +47,7 @@ export function Testimonials() {
       </div>
 
       <div className="shell relative mx-auto max-w-3xl text-center">
-        <Eyebrow>Kind Words</Eyebrow>
+        <Eyebrow>{t.testimonials.eyebrow}</Eyebrow>
 
         <motion.span
           initial={{ opacity: 0, scale: 0.6 }}
@@ -68,7 +70,7 @@ export function Testimonials() {
               transition={{ duration: 0.5, ease: EASE }}
             >
               <blockquote className="font-serif text-2xl leading-snug text-cream sm:text-3xl">
-                {current.quote}
+                {t.testimonials.quotes[current.id]}
               </blockquote>
               <figcaption className="mt-7 flex flex-col items-center gap-3">
                 <StarRating rating={current.rating} className="text-cream/80" />
@@ -81,9 +83,9 @@ export function Testimonials() {
         </div>
 
         <div className="mt-10 flex items-center justify-center gap-2.5">
-          {TESTIMONIALS.map((t, i) => (
+          {TESTIMONIALS.map((item, i) => (
             <button
-              key={t.author}
+              key={item.id}
               type="button"
               onClick={() => setIndex(i)}
               aria-label={`Show review ${i + 1} of ${count}`}

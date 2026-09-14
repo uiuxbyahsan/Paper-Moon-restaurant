@@ -11,6 +11,7 @@
     "gen:logo": "node scripts/make-logo.mjs"
   },
   "dependencies": {
+    "circle-flags": "^2.8.3",
     "framer-motion": "^12.40.0",
     "next": "14.2.35",
     "react": "^18",

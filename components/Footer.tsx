@@ -1,33 +1,43 @@
+"use client";
+
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { BackToTop } from "@/components/BackToTop";
 import { NAV_LINKS, SITE } from "@/lib/site";
-
-const PAGES = [...NAV_LINKS, { label: "Reservation", href: "#reserve" }, { label: "Full Menu", href: "/menu" }];
+import { useLanguage } from "@/lib/LanguageContext";
 
 export function Footer() {
+  const { t } = useLanguage();
+
+  // Nav links (translated) plus the two footer-only destinations.
+  const pages: { key: string; href: string; label: string }[] = [
+    ...NAV_LINKS.map((link) => ({ key: link.href, href: link.href, label: t.nav.links[link.id] })),
+    { key: "#reserve", href: "#reserve", label: t.footer.reservation },
+    { key: "/menu", href: "/menu", label: t.footer.fullMenu },
+  ];
+
   return (
     <footer id="contact" className="scroll-mt-24 bg-cream text-charcoal">
       <div className="shell grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-4">
         {/* Brand */}
         <div className="lg:col-span-1">
           <Logo tone="onLight" className="h-16 w-auto" />
-          <p className="mt-6 max-w-xs text-charcoal/70">{SITE.tagline}</p>
+          <p className="mt-6 max-w-xs text-charcoal/70">{t.footer.tagline}</p>
         </div>
 
         {/* Pages */}
         <nav aria-label="Footer">
-          <h3 className="text-xs uppercase tracking-eyebrow text-charcoal/50">Pages</h3>
+          <h3 className="text-xs uppercase tracking-eyebrow text-charcoal/50">{t.footer.pagesTitle}</h3>
           <ul className="mt-5 space-y-3">
-            {PAGES.map((link) =>
+            {pages.map((link) =>
               link.href.startsWith("/") ? (
-                <li key={link.href}>
+                <li key={link.key}>
                   <Link href={link.href} className="font-serif text-xl transition-opacity hover:opacity-60">
                     {link.label}
                   </Link>
                 </li>
               ) : (
-                <li key={link.href}>
+                <li key={link.key}>
                   <a href={link.href} className="font-serif text-xl transition-opacity hover:opacity-60">
                     {link.label}
                   </a>
@@ -39,7 +49,7 @@ export function Footer() {
 
         {/* Visit */}
         <div>
-          <h3 className="text-xs uppercase tracking-eyebrow text-charcoal/50">Visit</h3>
+          <h3 className="text-xs uppercase tracking-eyebrow text-charcoal/50">{t.footer.visitTitle}</h3>
           <address className="mt-5 space-y-3 not-italic text-charcoal/75">
             <p>
               <a href={SITE.mapsUrl} target="_blank" rel="noopener noreferrer" className="hover:text-charcoal">
@@ -63,7 +73,7 @@ export function Footer() {
         {/* Connect */}
         <div className="flex flex-col gap-8">
           <div>
-            <h3 className="text-xs uppercase tracking-eyebrow text-charcoal/50">Follow Us</h3>
+            <h3 className="text-xs uppercase tracking-eyebrow text-charcoal/50">{t.footer.followTitle}</h3>
             <a
               href={SITE.instagramUrl}
               target="_blank"
@@ -84,7 +94,7 @@ export function Footer() {
       <div className="border-t border-charcoal/15">
         <div className="shell flex flex-col items-center justify-between gap-3 py-6 text-sm text-charcoal/60 sm:flex-row">
           <p>
-            {SITE.name} © 2026 · {SITE.addressCountry}
+            {SITE.name} © {new Date().getFullYear()} · {t.footer.country}
           </p>
           <BackToTop />
         </div>

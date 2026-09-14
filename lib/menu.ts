@@ -1,24 +1,25 @@
-// Menu data — single source of truth for both the homepage Menu tabs (§5.5)
-// and the full /menu route. Prices are placeholder KM values reconstructed from
-// Paper Moon's real menu + Instagram (see brief §8 — swap before launch).
+// Menu data — single source of truth for the STRUCTURAL side of the menu:
+// stable ids, prices and images. The translated names + descriptions live in
+// lib/translations.ts, keyed by these same ids (see brief). Both the homepage
+// Menu tabs (§5.5) and the full /menu route read from here and pair each item
+// with its translated copy at render time.
 //
-// Each item's `image` points at a branded SVG placeholder. To use a real photo,
-// drop the file in /public/images/menu/ and change this one `image` line.
+// Each item's `image` points at a branded placeholder under /public/images/food.
+// To use a real photo, drop the file in and change this one `image` line.
 
 export type MenuItem = {
-  name: string;
-  /** Bosnian name shown as a subtitle where the dish has one. */
+  /** Stable id — the translation key in lib/translations.ts (menu.items[id]). */
+  id: string;
+  /** Bosnian name shown as an italic subtitle in the English view only. */
   localName?: string;
-  description: string;
   /** Price in KM (Bosnian convertible mark). */
   price: number;
   image: string;
 };
 
 export type MenuCategory = {
-  /** Tab id / anchor. */
+  /** Tab id / anchor — also the translation key (menu.categories[id]). */
   id: string;
-  label: string;
   items: MenuItem[];
 };
 
@@ -26,177 +27,72 @@ export const CURRENCY = "KM";
 
 const img = (slug: string) => `/images/food/${slug}.jpg`;
 
+// Helper: id doubles as the image slug for every dish here.
+const item = (id: string, price: number, localName?: string): MenuItem => ({
+  id,
+  price,
+  localName,
+  image: img(id),
+});
+
 export const MENU: MenuCategory[] = [
   {
     id: "appetizers",
-    label: "Appetizers",
     items: [
-      {
-        name: "Olive & Walnut Board",
-        description: "Marinated olives, toasted walnuts, and aged cheese on warm flatbread.",
-        price: 8,
-        image: img("olive-walnut-board"),
-      },
-      {
-        name: "Smoked Eggplant Ajvar Dip",
-        description: "Slow-roasted peppers and aubergine, stone-ground and finished with olive oil.",
-        price: 7,
-        image: img("smoked-eggplant-ajvar"),
-      },
-      {
-        name: "Fig & Prosciutto Crostini",
-        description: "Crisp sourdough, sweet fig, cured prosciutto, and a drizzle of honey.",
-        price: 9,
-        image: img("fig-prosciutto-crostini"),
-      },
-      {
-        name: "Zucchini & Dill Fritters",
-        description: "Golden courgette fritters with fresh dill and a cool yoghurt dip.",
-        price: 8,
-        image: img("zucchini-dill-fritters"),
-      },
+      item("olive-walnut-board", 8),
+      item("smoked-eggplant-ajvar", 7),
+      item("fig-prosciutto-crostini", 9),
+      item("zucchini-dill-fritters", 8),
     ],
   },
   {
     id: "salads",
-    label: "Salads",
     items: [
-      {
-        name: "Burrata & Heirloom Tomato",
-        description: "Creamy burrata, ripe heirloom tomatoes, basil, and aged balsamic.",
-        price: 12,
-        image: img("burrata-heirloom-tomato"),
-      },
-      {
-        name: "Rocket, Parmesan & Citrus Salad",
-        description: "Peppery rocket, shaved parmesan, and bright orange in a citrus dressing.",
-        price: 10,
-        image: img("rocket-parmesan-citrus"),
-      },
-      {
-        name: "Mediterranean Chopped Salad",
-        description: "Cucumber, tomato, olives, and feta tossed with herbs and lemon.",
-        price: 9,
-        image: img("mediterranean-chopped"),
-      },
+      item("burrata-heirloom-tomato", 12),
+      item("rocket-parmesan-citrus", 10),
+      item("mediterranean-chopped", 9),
     ],
   },
   {
     id: "pizza",
-    label: "Pizza",
     items: [
-      {
-        name: "Margherita Classica",
-        description: "San Marzano tomato, fior di latte, fresh basil, extra-virgin olive oil.",
-        price: 11,
-        image: img("margherita-classica"),
-      },
-      {
-        name: "Quattro Formaggi",
-        description: "Mozzarella, gorgonzola, parmesan, and smoked scamorza on a thin crust.",
-        price: 13,
-        image: img("quattro-formaggi"),
-      },
-      {
-        name: "Prosciutto & Arugula",
-        description: "Cured prosciutto, wild rocket, and parmesan over a wood-fired base.",
-        price: 14,
-        image: img("prosciutto-arugula"),
-      },
+      item("margherita-classica", 11),
+      item("quattro-formaggi", 13),
+      item("prosciutto-arugula", 14),
     ],
   },
   {
     id: "mains",
-    label: "Main Dishes",
     items: [
-      {
-        name: "Grilled Beef Steak",
-        localName: "Biftek na Žaru",
-        description: "Char-grilled beef tenderloin with seasonal vegetables and pepper sauce.",
-        price: 28,
-        image: img("grilled-beef-steak"),
-      },
-      {
-        name: "Chicken in Gorgonzola Sauce",
-        localName: "Piletina sa Gorgonzolom",
-        description: "Pan-seared chicken breast in a velvety gorgonzola cream.",
-        price: 22,
-        image: img("chicken-gorgonzola"),
-      },
-      {
-        name: "Salmon in Orange Glaze",
-        localName: "Losos u Umaku od Narandže",
-        description: "Fillet of salmon glazed with orange and thyme, served with greens.",
-        price: 26,
-        image: img("salmon-orange-glaze"),
-      },
+      item("grilled-beef-steak", 28, "Biftek na Žaru"),
+      item("chicken-gorgonzola", 22, "Piletina sa Gorgonzolom"),
+      item("salmon-orange-glaze", 26, "Losos u Umaku od Narandže"),
     ],
   },
   {
     id: "desserts",
-    label: "Desserts",
-    items: [
-      {
-        name: "Kadaif",
-        description: "Shredded pastry baked golden, soaked in fragrant syrup and walnuts.",
-        price: 8,
-        image: img("kadaif"),
-      },
-      {
-        name: "Apple Pie",
-        localName: "Pita od Jabuke",
-        description: "Warm spiced apple in flaky pastry with a scoop of vanilla cream.",
-        price: 7,
-        image: img("apple-pie"),
-      },
-      {
-        name: "Cheesecake",
-        description: "Silky baked cheesecake on a buttery biscuit base with seasonal fruit.",
-        price: 9,
-        image: img("cheesecake"),
-      },
-    ],
+    items: [item("kadaif", 8), item("apple-pie", 7, "Pita od Jabuke"), item("cheesecake", 9)],
   },
   {
     id: "drinks",
-    label: "Drinks",
     items: [
-      {
-        name: "Morning Croissant & Butter",
-        description: "Freshly baked all-butter croissant with jam — the perfect start.",
-        price: 5,
-        image: img("morning-croissant"),
-      },
-      {
-        name: "Cappuccino",
-        description: "Espresso under a soft cloud of steamed milk.",
-        price: 4,
-        image: img("cappuccino"),
-      },
-      {
-        name: "Fresh Orange Juice",
-        description: "Hand-squeezed, served cold.",
-        price: 6,
-        image: img("fresh-orange-juice"),
-      },
+      item("morning-croissant", 5),
+      item("cappuccino", 4),
+      item("fresh-orange-juice", 6),
     ],
   },
 ];
 
-/**
- * Look up a dish by its English name or its Bosnian localName. Lets the
- * Favorite Dishes and Our Signatures sections reuse the menu as the single
- * source of truth for names + images.
- */
-export function getDish(nameOrLocal: string): MenuItem | undefined {
+/** Look up a dish by its stable id. */
+export function getDish(id: string): MenuItem | undefined {
   for (const category of MENU) {
-    for (const item of category.items) {
-      if (item.name === nameOrLocal || item.localName === nameOrLocal) return item;
+    for (const dish of category.items) {
+      if (dish.id === id) return dish;
     }
   }
   return undefined;
 }
 
-export function getDishImage(nameOrLocal: string): string {
-  return getDish(nameOrLocal)?.image ?? "/images/food/burrata-heirloom-tomato.jpg";
+export function getDishImage(id: string): string {
+  return getDish(id)?.image ?? img("burrata-heirloom-tomato");
 }
